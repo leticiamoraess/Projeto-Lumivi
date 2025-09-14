@@ -1,0 +1,583 @@
+body{
+    background-color: #FDC1D4;
+    margin: 0;
+    padding: 0;
+    color: #222;
+    transition: background 0.3s, color 0.3s;
+    font-family: 'Quicksand', sans-serif;
+}
+body.dark-mode {
+    background-color: #222;
+    color: #FDC1D4;
+}
+body.dark-mode .side-menu {
+    background-color: #222;
+}
+
+/* Ajustando a aparência dos dias da semana no modo escuro */
+body.dark-mode .fc-col-header-cell {
+    background-color: #333 !important; /* Fundo mais escuro para os dias da semana */
+    color: #FDC1D4 !important;          /* Texto em um tom claro para destacar */
+    font-weight: bold;                  /* Deixar o texto mais forte */
+}
+
+body.dark-mode .fc-col-header-cell:hover {
+    background-color: #444 !important;  /* Cor de fundo ao passar o mouse */
+}
+
+/* Ajustando o fundo da célula de título do mês e ano no modo escuro */
+body.dark-mode .fc-toolbar-title {
+    color: #FDC1D4 !important;          /* Cor do título do mês e ano */
+    font-weight: bold;
+}
+
+/* Melhorando o contraste do botão "today" e navegação */
+body.dark-mode .fc-today-button {
+    background-color: #74c69d !important;
+    color: #fff !important;
+}
+
+body.dark-mode .fc-prev-button,
+body.dark-mode .fc-next-button {
+    background-color: #444 !important;
+    color: #fff !important;
+}
+
+
+body.dark-mode .side-menu .menu-list a {
+    background-color: #444;
+}
+
+body.dark-mode .side-menu .menu-list a:hover {
+    background-color: #333;
+}
+
+body.dark-mode .header {
+    background-color: #111;
+    color: #FDC1D4;
+}
+
+body.dark-mode .header .nav-list a {
+    color: #FDC1D4;
+}
+
+body.dark-mode .header .nav-list a:hover {
+    color: #ADB447;
+}
+
+body.dark-mode .footer {
+    background-color: #181717;
+    color: #FDC1D4;
+}
+
+body.dark-mode .footer ul a {
+    color: #FDC1D4;
+}
+
+body.dark-mode .footer .copyright {
+    color: #888;
+}
+
+body.dark-mode .box,
+body.dark-mode .voice-box {
+  background-color: #2c2b2b;
+  color: #ffffff;
+}
+
+body.dark-mode h3 {
+  color: #ffffff;
+}
+body.dark-mode .fc .fc-button {
+  background-color: #333 !important;
+  color: #fff !important;
+  border: 1px solid #555 !important;
+}
+
+body.dark-mode .fc .fc-button:hover {
+  background-color: #444 !important;
+  border-color: #666 !important;
+}
+.sound-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+.gear-btn {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+}
+
+
+.theme-btn {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    margin-right: 0px;
+}
+
+.side-menu {
+    position: fixed;
+    top: 80px; /* altura do header */
+    left: 0;
+    width: 80px;
+    height: calc(100vh - 80px - 80px); /* 100vh - header - footer */
+    background-color: #FDC1D4;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-items:center
+}
+
+.side-menu .menu-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.side-menu .menu-list li {
+    margin: 20px 0; /* espaço entre os ícones fia */
+}
+
+.side-menu .menu-list a {
+    width: 50px;
+    height: 50px;
+    background-color: #adb447;
+    border-radius: 50%; /* Torna os ícones circulares */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    transition: transform 0.3s, background-color 0.3s;
+}
+.side-menu .menu-list a:hover {
+    transform: scale(1.1); /* animação foda ao passar o mouse */
+    background-color: #f5d1dc; 
+}
+
+.side-menu .menu-list img {
+    width: 30px; /* Tamanho do ícone */
+    height: 30px;
+}
+
+
+.ema {
+    width: 100px; 
+    height: auto; 
+    position: absolute;
+    
+    bottom: 114px;
+    right:20px;
+   
+}
+
+#hora {
+    font-size: 24px;
+    font-weight: bold;
+    color: rgb(255, 255, 255);
+  }
+  #texto{
+    color:white;
+    text-align: center;;
+  }
+ #user-avatar{
+width:30px; 
+height:30px;
+ border-radius:50%; 
+ object-fit:cover;
+ color: #fff;
+ }
+
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 1000;
+    width: 100%;
+    margin: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    background-color: #d6e6ed;
+    color: #fff;
+    box-sizing: border-box;
+    
+}
+
+.header .logo h1 {
+    margin: 0 auto;
+    font-size: 24px;
+}
+.nav-list {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Espaço entre os itens */
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.nav-list li {
+    display: flex;
+    align-items: center;
+    height: 100%;
+}
+
+
+.nav .nav-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+.nav .nav-list li {
+    margin: 0 15px;
+}
+
+.nav .nav-list a {
+    text-decoration: none;
+    color: #fff;
+    font-size: 16px;
+    transition: color 0.3s;
+    
+}
+
+.nav .nav-list a:hover {
+    color: #FDC1D4;
+}
+
+.footer{
+    padding :20px;
+    background-color: #ADB447;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+   
+
+}
+.footer ul{
+    margin-top:0;
+    padding:0;
+    list-style:none;
+    font-size:18px;
+    line-height:1.6;
+    margin-bottom: 0;
+    text-align: center;
+    color: white;
+
+}
+.footer ul a{
+    color:inherit;
+    text-decoration: none;
+    opacity:0.8;
+
+}
+.footer ul li{
+    display:inline-block;
+    padding: 0 15px;
+
+}
+.footer ul li a:hover{
+    opacity:1;
+}
+.footer .copyright{
+    margin-top: 15px;
+    text-align: center;
+    font-size: 13px;
+    color:#faf6f6;
+
+}
+
+.theme-btn,
+.sound-btn,
+.gear-btn,
+.nav-list a {
+    height: 40px;
+    display: flex;
+    align-items: center;
+}
+.container {
+      display: flex;
+    flex-direction: row;
+    align-items: flex-start; /* Alinha pelo topo */
+    gap: 20px;
+    padding: 20px;
+    background: var(--rosa-claro);
+    height: calc(100vh - 80px - 80px); /* ajuste se header/footer forem diferentes */
+    box-sizing: border-box;
+    margin-left:80px;
+    margin-top:99px;
+    }
+
+    .box {
+      background: white;
+    border-radius: 20px;
+    padding: 1rem;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    display: flex;
+    flex-direction: column;
+    flex: none; /* <-- impede de ocupar todo o espaço */
+    margin: 0;
+    }
+
+    .chat-box {
+    max-width: 320px;    /* largura máxima do chat */
+    min-width: 220px;    /* largura mínima opcional */
+    width: 100%;
+    height: 385px;       /* altura fixa, ajuste como quiser */
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+    
+
+    #chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      margin-bottom: 10px;
+    }
+
+    #chat-form input {
+      width: 80%;
+      padding: 0.5rem;
+      border-radius: 10px;
+      border: 1px solid #ccc;
+    }
+
+    #chat-form button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 10px;
+      background-color: var(--verde-oliva);
+      color: rgb(205, 84, 203);
+      cursor: pointer;
+    }
+
+    .fc {
+      background-color: var(--fundo-calendario);
+      border-radius: 15px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+    }
+
+    .fc-toolbar-title {
+      color: var(--titulo-calendario);
+      font-size: 1.5rem;
+    }
+
+    .fc-daygrid-day-number {
+      color: #ff69b4;
+      font-weight: bold;
+    }
+
+    .fc-daygrid-day {
+      border: 1px dashed var(--borda-calendario);
+    }
+    /* Todos os botões */
+.fc-button {
+  background-color: #f783ac !important;    /* fundo rosa */
+  border: none !important;                  /* sem borda */
+  border-radius: 10px !important;           /* bordas arredondadas */
+}
+
+/* Botões ao passar o mouse */
+.fc-button:hover {
+  background-color: #d6336c !important;    
+}
+
+/* Botão de "Hoje" */
+.fc-today-button {
+  background-color: #74c69d !important;    
+}
+
+.fc-today-button:hover {
+  background-color: #52b788 !important;     
+}
+/* Modal para adicionar eventos no calendário */
+.modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 15px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  position: relative;
+}
+
+body.dark-mode .modal-content {
+  background-color: #2c2b2b;
+  color: #ffffff;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.modal-header h2 {
+  margin: 0;
+  color: #f36c9c;
+}
+
+body.dark-mode .modal-header h2 {
+  color: #FDC1D4;
+}
+
+.close-modal {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: #888;
+}
+
+.close-modal:hover {
+  color: #f36c9c;
+}
+
+body.dark-mode .close-modal {
+  color: #888;
+}
+
+body.dark-mode .close-modal:hover {
+  color: #FDC1D4;
+}
+
+.modal-body {
+  margin-bottom: 20px;
+}
+
+.modal-body label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.modal-body input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-sizing: border-box;
+  margin-bottom: 15px;
+  font-family: 'Quicksand', sans-serif;
+}
+
+body.dark-mode .modal-body input {
+  background-color: #1e1e1e;
+  border: 1px solid #444;
+  color: #ffffff;
+}
+
+.modal-footer {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.btn-modal {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: 'Quicksand', sans-serif;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.btn-cancel {
+  background-color: #f0f0f0;
+  color: #333;
+}
+
+.btn-cancel:hover {
+  background-color: #e0e0e0;
+}
+
+body.dark-mode .btn-cancel {
+  background-color: #444;
+  color: #ffffff;
+}
+
+body.dark-mode .btn-cancel:hover {
+  background-color: #555;
+}
+
+.btn-save {
+  background-color: #f36c9c;
+  color: white;
+}
+
+.btn-save:hover {
+  background-color: #e55a8c;
+}
+
+body.dark-mode .btn-save {
+  background-color: #FDC1D4;
+  color: #111;
+}
+
+body.dark-mode .btn-save:hover {
+  background-color: #ffb3d9;
+}
+
+.voice-box {
+      display: flex;
+      flex-direction: column;
+      height: 385px; /* altura da caixa geral */
+      width: 500px; /* Largura aumentada */
+      overflow: auto; /* rolagem habilitada se conteúdo passar do limite */
+    }
+
+    .voice-box h3 {
+      font-size: 1.4em;
+      margin-bottom: 10px;
+    }
+
+    #jitsi-container {
+      min-height: 500px; /* conteúdo maior que o .voice-box para forçar rolagem */
+      width: 100%;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+
+
+
+.calendar-box{
+    overflow: auto;
+      flex: 1;
+  min-width: 280px;
+  max-width: 450px;
+  height: 385px;
+}
+
+#calendar {
+  width: 100%;
+}

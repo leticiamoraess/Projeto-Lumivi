@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Perfil do Usuário</title>
+  <link rel="stylesheet" href="usuario.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap">
+</head>
+<body>
+     <a href="../pagina-principal/pagina-principal.html" class="back-button">
+    <i class="fas fa-arrow-left"></i> Voltar
+  </a>
+  <div class="profile-container">
+    <h1>Meu Perfil</h1>
+    <div class="profile-card">
+      <div class="profile-pic-container">
+        <img id="profile-pic" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Foto de perfil">
+        <input type="file" id="upload-pic" accept="image/*">
+      </div>
+      <div class="profile-info">
+        <input type="text" id="display-name" placeholder="Seu nome...">
+        <textarea id="user-bio" placeholder="Sua bio..."></textarea>
+        <button id="save-profile">Salvar</button>
+        <button id="logout-btn" class="logout-btn">Sair</button>
+      </div>
+    </div>
+  </div>
+  <script type="module" src="usuario.js"></script>
+</body>
+</html>

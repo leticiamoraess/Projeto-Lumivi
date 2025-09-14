@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página Principal</title>
+    <link rel="stylesheet" href="pagina-principal.css"> 
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap">
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+ <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet">
+</head>
+<body>
+    
+    <header class="header">
+      <a href="../usuario/usuario.html">
+       <img id="user-avatar" src="img/user.png" alt="Avatar">
+      </a>
+        <div id="hora"></div>
+        
+        <div class="logo">      
+            <h1>Lumivi</h1>
+        </div>
+        <nav class="nav">
+           
+           
+            <ul class="nav-list">
+                <li> <button id="toggle-theme" class="theme-btn"><i class="fa-solid fa-moon" style="color: #ffffff;"></i></button>
+                <li> <button class="sound-btn" id="sound-btn"><img src="img/sound.png" alt="Som" width="24" height="24" id="sound-img"></button></li>
+                <li> <button class="gear-btn"><img src = "img/gear.png" height="20" width="20" alt="Configurações"></button></li>
+                <li><a href="#">Contato</a></li>
+            </ul>
+        </nav>
+    </header>
+
+   <aside class="side-menu">
+        <ul class="menu-list">
+            
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+            <li><a href="#"></a></li>
+        </ul>
+    </aside>
+
+    <div class="container">
+
+        <div class="box chat-box">
+        <h3>Chat</h3>
+        <div id="chat-messages"></div>
+       <form id="chat-form">
+        <input type="text" id="chat-input" placeholder="Digite sua mensagem" required>
+        <button type="submit">Enviar</button>
+        </form>
+        </div>
+        <div class="box calendar-box">
+        <h3>Calendário</h3>
+        <div id='calendar'></div>
+      </div>
+
+      <div class="box voice-box">
+    <h3>Canal de Voz</h3>
+    <div id="jitsi-container"></div>
+  </div>
+
+   <audio id="player" src="sound/Lo-fi.m4a" loop></audio>
+ <img src="img/rádio 2.png" alt="Descrição da imagem" width="100" height="100" class="ema" id="radio-img">
+    </div>
+
+ <section class = "footer">
+    <ul class = "list">
+        <li><a href = #>Home</a></li>
+        <li><a href="../sobre/sobre.html">Sobre nós</a></li>
+        <li><a href = #>Serviços</a></li>
+        <li><a href = #>Privacy Policy</a></li>
+    </ul>
+    <p class = "copyright">
+        LUMIVI @ 2025
+    </p>
+    <script type="module" src="/pages/usuario/usuario.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+   <script type="module" src = "chat.js"></script>
+    <script src="pagina-principal.js"></script>
+</body>
+</html>
