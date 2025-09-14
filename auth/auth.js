@@ -21,7 +21,7 @@ function loginComGoogle() {
     .then((result) => {
       const user = result.user;
       alert("Login com Google realizado!\nBem-vindo, " + (user.displayName || user.email));
-      window.location.href = "PaginaPrincipal/pagina-principal.html";    })
+      window.location.href = "../pages/pagina-principal/pagina-principal.html";    })
     .catch((error) => {
       console.error("Erro no login:", error);
       alert("Erro ao fazer login com Google: " + error.message);
@@ -62,7 +62,7 @@ document.addEventListener("DOMContentLoaded", () => {
       createUserWithEmailAndPassword(auth, email, senha)
         .then((userCredential) => {
           alert("Cadastro feito com sucesso! Agora faça login.");
-          window.location.href = "index.html";
+          window.location.href = "login.html";
         })
         .catch((error) => {
           alert("Erro ao cadastrar: " + error.message);
@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       signInWithEmailAndPassword(auth, email, senha)
         .then((userCredential) => {
           alert("Login bem-sucedido!");
-          window.location.href = "PaginaPrincipal/pagina-principal.html";
+          window.location.href = "../pages/pagina-principal/pagina-principal.html";
         })
         .catch((error) => {
           alert("Email ou senha inválidos.");

@@ -20,11 +20,11 @@ document.getElementById("resetForm").addEventListener("submit", function(e) {
   sendPasswordResetEmail(auth, email)
     .then(() => {
       alert("Se este email estiver cadastrado, você receberá um link para redefinir sua senha.");
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     })
     .catch(() => {
     
       alert("Se este email estiver cadastrado, você receberá um link para redefinir sua senha.");
-      window.location.href = "index.html";
+      window.location.href = "login.html";
     });
 });
