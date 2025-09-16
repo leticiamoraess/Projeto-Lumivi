@@ -1,9 +1,11 @@
-# Estrutura-Inicial-PPO
-Estrutura Inicial do site para o PPO no IFPE Campus Garanhuns (Protótipo)
-Ao tocar no rádio, toca e pausa a música (coloquei uma para testes), há o botão de mutar e desmutar a música ao lado do botão de mudar para o modo claro e escuro. O menu lateral (onde há os círculos), seria onde ficariam os usuários. O nome do site ainda não foi escolhido.
-# Modo Claro
+# Projeto Lumivi
+Projeto para o PPO do Curso Técnico em Informática integrado ao ensino médio no Instituto Federal de Pernambuco - Campus Garanhuns. Um protótipo.
+
+O Lumivi é uma aplicação web desenvolvida para integrar, em um único ambiente, ferramentas de comunicação e organização voltadas a grupos de estudo, equipes de trabalho e comunidades online. A plataforma conta com chat em tempo real, calendário interativo, canal de voz e vídeo, personalização de perfil e modo escuro, oferecendo uma experiência colaborativa acessível e intuitiva.
+
+# Modo Claro 24/06/2025
 ![Modo claro](https://github.com/user-attachments/assets/d5d2deef-4b52-410a-865c-967ba75ac20c)
-# Modo Escuro
+# Modo Escuro 24/06/2025
 ![Modo escuro](https://github.com/user-attachments/assets/5b6ed1ea-15df-42c0-8a3d-fd6597381c48)
 
 # Atualizações 24/06/2025
