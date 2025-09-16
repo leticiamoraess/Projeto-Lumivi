@@ -48,7 +48,7 @@ onAuthStateChanged(auth, (user) => {
     carregarPerfil(currentUserId);
   } else {
     alert("Você precisa estar logado para acessar essa página.");
-    window.location.href = "/index.html";
+    window.location.href = "../../auth/login.html";
   }
 });
 
@@ -103,5 +103,5 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
   const auth = getAuth();
   await signOut(auth);
   alert("Você saiu da sua conta!");
-  window.location.href = "/index.html"; // Redireciona para a página de login
+  window.location.href = "../../auth/login.html"; // Redireciona para a página de login
 });
