@@ -1,4 +1,3 @@
-// firebase-init.js (versão corrigida e organizada)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getFirestore,
@@ -11,7 +10,6 @@ import {
   orderBy
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-// --- CONFIG FIREBASE (substitua se necessário) ---
 const firebaseConfig = {
   apiKey: "AIzaSyBUxLcOvtCClJ0XMAXsDQusme7PS7Xeo9g",
   authDomain: "callppo.firebaseapp.com",
@@ -25,10 +23,10 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-// --- VARIÁVEIS GLOBAIS ---
+
 let calendar;
 let selectedDate = null;
-let modal; // referência ao modal criado dinamicamente
+let modal; 
 
 // ----------------- FUNÇÕES ----------------- //
 
@@ -37,7 +35,6 @@ let modal; // referência ao modal criado dinamicamente
  * Retorna a referência ao modal criado.
  */
 function createEventModal() {
-  // evita criar múltiplos modais caso a função seja chamada mais de uma vez
   if (document.getElementById('event-modal')) {
     return document.getElementById('event-modal');
   }
@@ -72,24 +69,20 @@ function createEventModal() {
   const cancelBtn = m.querySelector('.btn-cancel');
   const saveBtn = m.querySelector('.btn-save');
 
-  // fechar modal
   function hideModal() {
     m.style.display = 'none';
   }
 
-  // Clique no X fecha
   closeBtn.addEventListener('click', () => {
     console.log('close clicked');
     hideModal();
   });
 
-  // Cancelar fecha
   cancelBtn.addEventListener('click', () => {
     console.log('cancel clicked');
     hideModal();
   });
 
-  // Clique no overlay (mas somente se clicar fora do conteúdo)
   m.addEventListener('click', (e) => {
     if (e.target === m) {
       console.log('overlay clicked');
@@ -107,7 +100,6 @@ function createEventModal() {
     }
     console.log('Save clicked - title:', title, 'date:', selectedDate);
 
-    // chama função que salva no Firebase e adiciona ao calendário
     await addEventToCalendarAndFirebase(title, selectedDate);
 
     // limpa e fecha modal
@@ -127,7 +119,6 @@ function showEventModal(dateStr) {
   modal.querySelector('#event-date').value = dateStr;
   modal.querySelector('#event-title').value = '';
   modal.style.display = 'flex';
-  // foco no input de título para usabilidade
   modal.querySelector('#event-title').focus();
 }
 
@@ -172,7 +163,6 @@ async function loadEventsFromFirebase() {
 
     querySnapshot.forEach((docSnap) => {
       const eventData = docSnap.data();
-      // Algumas vezes o campo date pode vir como string; FullCalendar aceita ISO string
       calendar.addEvent({
         id: docSnap.id,
         title: eventData.title,
@@ -186,9 +176,7 @@ async function loadEventsFromFirebase() {
   }
 }
 
-/**
- * (Opcional) Remover evento do Firebase e do calendário
- */
+
 async function removeEventFromCalendarAndFirebase(eventId) {
   try {
     await deleteDoc(doc(db, "eventos", eventId));
@@ -202,7 +190,6 @@ async function removeEventFromCalendarAndFirebase(eventId) {
 
 // ----------------- INICIALIZAÇÃO ----------------- //
 document.addEventListener('DOMContentLoaded', async function () {
-  // cria modal (e seus listeners) antes de usar
   modal = createEventModal();
 
   // inicializa o FullCalendar
@@ -216,11 +203,9 @@ document.addEventListener('DOMContentLoaded', async function () {
     selectable: true,
     showNonCurrentDates: false,
     dateClick: function (info) {
-      // mostra o modal (com a data selecionada)
       showEventModal(info.dateStr);
     },
     eventClick: function(info) {
-      // Exemplo: perguntar se quer deletar
       const doDelete = confirm(`Deseja remover o evento "${info.event.title}"?`);
       if (doDelete && info.event.id) {
         removeEventFromCalendarAndFirebase(info.event.id);
@@ -230,6 +215,5 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   calendar.render();
 
-  // carrega eventos salvos no Firebase
   await loadEventsFromFirebase();
 });
