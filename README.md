@@ -1,4 +1,4 @@
-# [![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=F7F7F7&center=true&vCenter=true&width=435&lines=%F0%9F%8C%B8+PROJETO+LUMIVI+%F0%9F%8C%B8)](https://git.io/typing-svg)
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Fira+Code&pause=1000&color=F7F7F7&center=true&vCenter=true&width=435&lines=%F0%9F%8C%B8+PROJETO+LUMIVI+%F0%9F%8C%B8)](https://git.io/typing-svg)
 Projeto para o PPO do Curso Técnico em Informática integrado ao ensino médio no Instituto Federal de Pernambuco - Campus Garanhuns. Um protótipo.
 
 O Lumivi é uma aplicação web desenvolvida para integrar, em um único ambiente, ferramentas de comunicação e organização voltadas a grupos de estudo, equipes de trabalho e comunidades online. A plataforma conta com chat em tempo real, calendário interativo, canal de voz e vídeo, personalização de perfil e modo escuro, oferecendo uma experiência colaborativa acessível e intuitiva.
