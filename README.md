@@ -14,7 +14,6 @@ Alinhamento dos botões do modo escuro, configuração, mutar e desmutar e conta
 Mudança do icone da lua e do sol.
 Rádio feito por nós mesmas, ou seja, imagem autoral.
 
-
 # Atualizações 02/07/2025
 Na página de Login, agora se tem o botão redefinir senha, onde o ousuário coloca o seu email e vai ser enviado uma redefinição de senha para lá ;)
 ![image](https://github.com/user-attachments/assets/1d748e6b-16bb-4ed9-ba03-0f755ef8a398)
