@@ -3,31 +3,11 @@ Projeto para o PPO do Curso Técnico em Informática integrado ao ensino médio 
 
 O Lumivi é uma aplicação web desenvolvida para integrar, em um único ambiente, ferramentas de comunicação e organização voltadas a grupos de estudo, equipes de trabalho e comunidades online. A plataforma conta com chat em tempo real, calendário interativo, canal de voz e vídeo, personalização de perfil e modo escuro, oferecendo uma experiência colaborativa acessível e intuitiva.
 
-# Modo Claro 24/06/2025
-![Modo claro](https://github.com/user-attachments/assets/d5d2deef-4b52-410a-865c-967ba75ac20c)
-# Modo Escuro 24/06/2025
-![Modo escuro](https://github.com/user-attachments/assets/5b6ed1ea-15df-42c0-8a3d-fd6597381c48)
+# Modo Claro 
+<img width="1918" height="858" alt="Captura de tela 2025-09-18 214516" src="https://github.com/user-attachments/assets/60fbb0ea-d6f5-4f86-bef8-e3c3a7ec8b2e" />
 
-# Atualizações 24/06/2025
-Página de login foi conectada ao site.
-Alinhamento dos botões do modo escuro, configuração, mutar e desmutar e contatos.
-Mudança do icone da lua e do sol.
-Rádio feito por nós mesmas, ou seja, imagem autoral.
+# Modo Escuro 
+<img width="1919" height="859" alt="Captura de tela 2025-09-18 214546" src="https://github.com/user-attachments/assets/35c6845f-d18f-4f13-bf6a-e023008035aa" />
 
-# Atualizações 02/07/2025
-Na página de Login, agora se tem o botão redefinir senha, onde o ousuário coloca o seu email e vai ser enviado uma redefinição de senha para lá ;)
-![image](https://github.com/user-attachments/assets/1d748e6b-16bb-4ed9-ba03-0f755ef8a398)
-![image](https://github.com/user-attachments/assets/929a75e9-a963-4fcd-b70b-9fda84aa454f)
-
-# Atualização da semana 06/07/2025 até 10/07/2025
-Adicionamos ao rádio músicas lo-fi (acredito que são 47min, algo do gênero)
-Lateral esquerda do site organizada.
-Chat adicionado.
-Calendário adicionado onde o usuário pode adicionar coisas a ele (falta adicionar essa questão no firebase).
-Teste das video chamadas (Por enquanto vamos manter essa ferramenta).
-Sobre nós feito.
-Modo escuro atualizado.
-Icone de mostrar e esconder senha foram invertidos.
-
-# Atualizações da semana 13/07/2025 até 17/07/2025
-Mudanças no calendário, Página do usuário em construção
+# Atualizações do ínicio do mês até o dia 18/09/2025 
+Calendário totalmente atualizado, com funções como adicionar eventos e apagar tais eventos do calendário, organização das páginas dos códigos (html, css e js), Pagina de usuário completamente finalizada, documentação em andamento, designer e fontes escolhidas e colocadas com sucesso na aplicação web. 
