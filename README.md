@@ -10,4 +10,4 @@ O Lumivi é uma aplicação web desenvolvida para integrar, em um único ambient
 <img width="1919" height="859" alt="Captura de tela 2025-09-18 214546" src="https://github.com/user-attachments/assets/35c6845f-d18f-4f13-bf6a-e023008035aa" />
 
 # Atualizações do ínicio do mês até o dia 18/09/2025 
-Calendário totalmente atualizado, com funções como adicionar eventos e apagar tais eventos do calendário, organização das páginas dos códigos (html, css e js), Pagina de usuário completamente finalizada, documentação em andamento, designer e fontes escolhidas e colocadas com sucesso na aplicação web. 
+Calendário totalmente atualizado, com funções como adicionar eventos e apagar tais eventos do calendário, organização das páginas dos códigos (html, css e js), Pagina de usuário completamente finalizada, documentação em andamento, designer e fontes escolhidas e colocadas com sucesso na aplicação web. As imagens de amostração do nosso projeto serão atualizadas quando ele estiver 100% decolado. 🚀
