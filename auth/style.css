@@ -1,0 +1,133 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Quicksand', sans-serif;
+}
+
+body {
+  background-color: #fcd7e2;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.container {
+  background-color: white;
+  padding: 40px;
+  border-radius: 20px;
+  box-shadow: 5px 10px 20px rgba(0, 0, 0, 0.1);
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  position: relative;
+}
+
+h1 {
+  color: #f36c9c;
+  font-size: 28px;
+  margin-bottom: 5px;
+}
+
+p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+.google-btn {
+  background-color: white;
+  border: 1px solid #ddd;
+  padding: 10px;
+  width: 100%;
+  border-radius: 50px;
+  box-shadow: 2px 4px 8px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.ou {
+  margin: 10px 0;
+  color: #aaa;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+input {
+  padding: 10px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  outline: none;
+  transition: 0.3s;
+}
+
+input:focus {
+  border-bottom: 2px solid #f36c9c;
+}
+
+.entrar-btn {
+  background-color: #f36c9c;
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 50px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.entrar-btn:hover {
+  background-color: #e55a8c;
+}
+
+.cadastro {
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.cadastro a {
+  color: #f36c9c;
+  text-decoration: none;
+}
+#requisitosSenha {
+  list-style: none;
+  padding-left: 0;
+  margin-top: 8px;
+  font-size: 0.8em; 
+}
+
+.requisito-valido {
+  color: green;
+}
+.requisito-invalido {
+  color: red;
+}
+.resetsenha{
+  color: #f36c9c;
+  text-decoration: none;
+  margin-top: 16px;
+  font-size: 14px;
+  display:inline-block;
+}
+.enviar-btn {
+  background-color: #f36c9c;
+  border: none;
+  color: white;
+  padding: 12px;
+  border-radius: 50px;
+  margin-top: 15px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.enviar-btn:hover {
+  background-color: #e55a8c;
+}

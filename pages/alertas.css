@@ -1,0 +1,41 @@
+/* Estilos customizados para SweetAlert no Lumivi */
+
+.lumivi-swal-popup {
+  font-family: 'Quicksand', sans-serif !important;
+}
+
+.lumivi-swal-title {
+  color: #ADB447 !important;
+  font-weight: 600 !important;
+}
+
+.lumivi-swal-content {
+  color: #222 !important;
+}
+
+.lumivi-swal-confirm {
+  background-color: #ADB447 !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+.lumivi-swal-cancel {
+  background-color: #f36c9c !important;
+  border-radius: 8px !important;
+  font-weight: 600 !important;
+}
+
+/* Modo escuro */
+.swal2-popup.swal2-modal.lumivi-swal-popup[data-theme="dark-mode"],
+body.dark-mode .swal2-popup.swal2-modal.lumivi-swal-popup {
+  background-color: #2a2a2a !important;
+  color: #FDC1D4 !important;
+}
+
+body.dark-mode .lumivi-swal-title {
+  color: #FDC1D4 !important;
+}
+
+body.dark-mode .lumivi-swal-content {
+  color: #FDC1D4 !important;
+}

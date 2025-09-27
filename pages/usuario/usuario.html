@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Perfil do Usuário - Lumivi</title>
+  <link rel="stylesheet" href="usuario.css">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+</head>
+<body>
+  <header class="header-profissional">
+    <div class="header-content">
+      <div class="logo-container">
+        <h1 class="logo">Lumivi</h1>
+      </div>
+      <nav class="nav-profissional">
+        <ul class="nav-list-profissional">
+          <li><a href="../pagina-principal/pagina-principal.html" class="nav-link">
+            <i class="fas fa-home"></i> Início
+          </a></li>
+          <li><a href="../../pages/sala_interface.html" class="nav-link">
+            <i class="fas fa-door-open"></i> Salas
+          </a></li>
+        </ul>
+      </nav>
+      <div class="user-actions">
+        <button id="toggle-theme-profissional" class="theme-btn-profissional">
+          <i class="fa-solid fa-moon" style="color: #ffffff;"></i>
+        </button>
+        <button id="logout-btn-header" class="logout-btn-profissional">
+          <i class="fas fa-sign-out-alt" style="color: #ffffff;"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div class="profile-container">
+    <div class="profile-header">
+      <h1>Meu Perfil</h1>
+    </div>
+    <div class="profile-card">
+      <div class="profile-pic-container">
+        <img id="profile-pic" src="https://cdn-icons-png.flaticon.com/512/149/149071.png" alt="Foto de perfil">
+        <input type="file" id="upload-pic" accept="image/*">
+        <label for="upload-pic" class="upload-label">
+          <i class="fas fa-camera"></i> Alterar Foto
+        </label>
+      </div>
+      <div class="profile-info">
+        <div class="form-group">
+          <label for="display-name">Nome de Exibição</label>
+          <input type="text" id="display-name" placeholder="Digite seu nome completo">
+        </div>
+        <div class="form-group">
+          <label for="user-bio">Biografia</label>
+          <textarea id="user-bio" placeholder="Fale um pouco sobre você..."></textarea>
+        </div>
+        <div class="button-group">
+          <button id="save-profile" class="btn-primary">
+            <i class="fas fa-save"></i> Salvar Alterações
+          </button>
+          <button id="logout-btn" class="btn-secondary">
+            <i class="fas fa-sign-out-alt"></i> Sair da Conta
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="usuario.js"></script>
+  <script type="module" src="usuario_header.js"></script>
+</body>
+</html>

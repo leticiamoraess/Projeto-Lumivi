@@ -1,0 +1,293 @@
+/* sala_interface.css */
+/* Estilos para a interface de gerenciamento de salas */
+
+body {
+  margin: 0;
+  font-family: 'Quicksand', sans-serif;
+  background-color: #FDC1D4;
+  color: #222;
+  transition: background 0.3s, color 0.3s;
+}
+
+body.dark-mode {
+  background-color: #222;
+  color: #FDC1D4;
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: 100vh;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+.header h1 {
+  color: #ADB447;
+  font-size: 2rem;
+}
+
+body.dark-mode .header h1 {
+  color: #FDC1D4;
+}
+
+.content {
+  background-color: white;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+}
+
+body.dark-mode .content {
+  background-color: #1e1e1e;
+}
+
+.create-room-section,
+.join-room-section,
+.user-rooms-section {
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+body.dark-mode .create-room-section,
+body.dark-mode .join-room-section,
+body.dark-mode .user-rooms-section {
+  border-bottom: 1px solid #444;
+}
+
+.create-room-section h2,
+.join-room-section h2,
+.user-rooms-section h2 {
+  color: #ADB447;
+  margin-top: 0;
+  margin-bottom: 20px;
+}
+
+body.dark-mode .create-room-section h2,
+body.dark-mode .join-room-section h2,
+body.dark-mode .user-rooms-section h2 {
+  color: #FDC1D4;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+input[type="text"],
+input[type="number"],
+select {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-family: 'Quicksand', sans-serif;
+  box-sizing: border-box;
+}
+
+body.dark-mode input[type="text"],
+body.dark-mode input[type="number"],
+body.dark-mode select {
+  background-color: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  font-weight: normal;
+}
+
+.checkbox-label input[type="checkbox"] {
+  margin-right: 10px;
+  width: auto;
+}
+
+.btn-primary,
+.btn-secondary {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary {
+  background-color: #ADB447;
+}
+
+.btn-secondary {
+  background-color: #f36c9c;
+}
+
+body.dark-mode .btn-primary {
+  background-color: #FDC1D4;
+  color: #111;
+}
+
+body.dark-mode .btn-secondary {
+  background-color: #d6336c;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  opacity: 0.8;
+}
+
+.rooms-list {
+  list-style: none;
+  padding: 0;
+}
+
+.room-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #eee;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  background-color: #f9f9f9;
+}
+
+body.dark-mode .room-item {
+  background-color: #2a2a2a;
+  border: 1px solid #444;
+}
+
+.room-info h3 {
+  margin: 0 0 5px 0;
+  color: #ADB447;
+}
+
+body.dark-mode .room-info h3 {
+  color: #FDC1D4;
+}
+
+.room-info p {
+  margin: 3px 0;
+  font-size: 0.9em;
+  color: #666;
+}
+
+body.dark-mode .room-info p {
+  color: #aaa;
+}
+
+.room-actions {
+  text-align: right;
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 1000;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  background-color: white;
+  margin: 15% auto;
+  padding: 20px;
+  border-radius: 10px;
+  width: 80%;
+  max-width: 500px;
+  position: relative;
+  text-align: center;
+}
+
+body.dark-mode .modal-content {
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  cursor: pointer;
+}
+
+.close:hover {
+  color: #f36c9c;
+}
+
+body.dark-mode .close:hover {
+  color: #FDC1D4;
+}
+
+.back-button-container {
+  text-align: center;
+}
+
+.back-button {
+  display: inline-block;
+  background-color: #f0f0f0;
+  color: #ADB447;
+  padding: 10px 20px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+  transition: 0.3s ease;
+}
+
+body.dark-mode .back-button {
+  background-color: #2a2a2a;
+  color: #FDC1D4;
+}
+
+.back-button:hover {
+  background-color: #ADB447;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+}
+
+body.dark-mode .back-button:hover {
+  background-color: #FDC1D4;
+  color: #1e1e1e;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+  .room-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  
+  .room-actions {
+    width: 100%;
+    margin-top: 15px;
+    text-align: center;
+  }
+  
+  .btn-primary {
+    width: 100%;
+  }
+}

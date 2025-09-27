@@ -1,0 +1,117 @@
+<head>
+  <link href="https://fonts.googleapis.com/css?family=Quicksand:400,700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #F1DCE1;
+      margin: 0;
+      font-family: 'Quicksand', sans-serif;
+    }
+
+    .config-box {
+      background-color: #fff;
+      width: 420px;
+      padding: 30px 25px;
+      border-radius: 16px;
+      box-shadow: 0px 6px 25px rgba(0, 0, 0, 0.15);
+
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+
+    h2 {
+      text-align: center;
+      font-size: 24px;
+      margin-bottom: 25px;
+      color: #E91E63;
+    }
+
+    label {
+      font-size: 16px;
+      display: block;
+      margin-bottom: 20px;
+      color: #444;
+    }
+
+    /* checkbox mais bonitinho */
+    input[type="checkbox"] {
+      accent-color: #F06292;
+      width: 18px;
+      height: 18px;
+      margin-right: 8px;
+      transform: scale(1.1);
+      cursor: pointer;
+    }
+
+    /* caixas de número e select */
+    input[type="number"],
+    select {
+      border: 2px solid #F48FB1;
+      border-radius: 8px;
+      padding: 8px 12px;
+      font-size: 15px;
+      font-family: 'Quicksand', sans-serif;
+      outline: none;
+      background: #fff;
+      transition: all 0.3s ease;
+      width: 100%;
+      margin-top: 6px;
+    }
+
+    input[type="number"]:focus,
+    select:focus {
+      border-color: #E91E63;
+      box-shadow: 0px 0px 6px rgba(233, 30, 99, 0.4);
+    }
+
+    /* dar espaçamento só nos selects/inputs */
+    label input,
+    label select {
+      margin-top: 6px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="config-box">
+    <h2>⚙️ Configurações</h2>
+
+    <label>
+      <input type="checkbox"> Bloquear Chat de voz
+    </label>
+
+    <label>
+      Número de usuários:
+      <input type="number" min="1" value="50">
+    </label>
+
+    <label>
+      Chat de texto
+      <select>
+        <option>Todos</option>
+        <option>Administradores</option>
+        <option>Dono</option>
+      </select>
+    </label>
+
+    <label>
+      Calendário
+      <select>
+        <option>Todos</option>
+        <option>Administradores</option>
+        <option>Dono</option>
+      </select>
+    </label>
+
+    <label>
+      Convites
+      <select>
+        <option>Todos</option>
+        <option>Administradores</option>
+        <option>Dono</option>
+      </select>
+    </label>
+  </div>
+</body>
+
