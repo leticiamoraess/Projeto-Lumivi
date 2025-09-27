@@ -54,6 +54,9 @@ document.getElementById('radio-img').onclick = function() {
     }
 };
 
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('roomId') || window.roomId || 'defaultRoom';
+
 function loadJitsiMeet() {
   // Mostrar confirmação antes de entrar no canal de voz
   Swal.fire({
@@ -72,7 +75,7 @@ function loadJitsiMeet() {
       script.onload = function() {
         const domain = "meet.jit.si";
         const options = {
-          roomName: "TCCSalaDaBarbara",
+          roomName: roomId, // <-- Usa o ID da sala como nome da reunião
           width: "100%",
           height: 500,
           parentNode: document.querySelector('#jitsi-container'),

@@ -35,7 +35,8 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
       await addDoc(collection(db, "chat"), {
         text,
         user: currentUser.displayName || currentUser.email,
-        timestamp: serverTimestamp()
+        timestamp: serverTimestamp(),
+        roomId // <-- Adiciona o ID da sala
       });
       input.value = "";
     } catch (error) {
@@ -51,7 +52,11 @@ document.getElementById("chat-form").addEventListener("submit", async function(e
 
 // Exibir mensagens em tempo real
 const chatMessages = document.getElementById("chat-messages");
-const q = query(collection(db, "chat"), orderBy("timestamp"));
+const q = query(
+  collection(db, "chat"),
+  where("roomId", "==", roomId),
+  orderBy("timestamp")
+);
 onSnapshot(q, (snapshot) => {
   chatMessages.innerHTML = "";
   snapshot.forEach((doc) => {
@@ -62,4 +67,8 @@ onSnapshot(q, (snapshot) => {
   });
   chatMessages.scrollTop = chatMessages.scrollHeight;
 });
+
+// Exemplo: obter o roomId da URL ou de uma variável global
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('roomId') || window.roomId || 'defaultRoom';
 

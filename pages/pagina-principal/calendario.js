@@ -7,7 +7,8 @@ import {
   deleteDoc,
   doc,
   query,
-  orderBy
+  orderBy,
+  where
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 const firebaseConfig = {
@@ -155,6 +156,7 @@ async function addEventToCalendarAndFirebase(title, date) {
     const docRef = await addDoc(collection(db, "eventos"), {
       title: title,
       date: date,
+      roomId, // <-- Adiciona o ID da sala
       createdAt: new Date()
     });
 
@@ -183,7 +185,11 @@ async function addEventToCalendarAndFirebase(title, date) {
  */
 async function loadEventsFromFirebase() {
   try {
-    const q = query(collection(db, "eventos"), orderBy("createdAt"));
+    const q = query(
+      collection(db, "eventos"),
+      where("roomId", "==", roomId),
+      orderBy("createdAt")
+    );
     const querySnapshot = await getDocs(q);
 
     querySnapshot.forEach((docSnap) => {
@@ -259,3 +265,6 @@ document.addEventListener('DOMContentLoaded', async function () {
 
   await loadEventsFromFirebase();
 });
+
+const urlParams = new URLSearchParams(window.location.search);
+const roomId = urlParams.get('roomId') || window.roomId || 'defaultRoom';

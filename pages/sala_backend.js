@@ -1,7 +1,7 @@
 // sala_backend.js
 // Lógica de backend para manipulação de salas e convites
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, updateDoc, arrayUnion, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, doc, setDoc, getDoc, collection, addDoc, updateDoc, arrayUnion, query, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -229,6 +229,142 @@ async function entrarEmSalaPorCodigo(codigo) {
   }
 }
 
+// Gerar convite por email
+async function gerarConvitePorEmail(roomId, email) {
+  const usuario = auth.currentUser;
+  if (!usuario) throw new Error("Usuário não autenticado");
+
+  // Verifica se o usuário é admin da sala
+  const salas = await obterSalasDoUsuario(usuario.uid);
+  const sala = salas.find(s => s.roomId === roomId && s.role === "admin");
+  if (!sala) throw new Error("Apenas administradores podem gerar convites");
+
+  const convite = {
+    roomId,
+    createdBy: usuario.uid,
+    email,
+    status: "pending",
+    createdAt: new Date(),
+    expiresAt: null // ou defina uma data de expiração
+  };
+
+  try {
+    const docRef = await addDoc(collection(db, "invites"), convite);
+    // Aqui você pode integrar com serviço de email para enviar o link
+    return docRef.id;
+  } catch (error) {
+    console.error("Erro ao gerar convite:", error);
+    throw error;
+  }
+}
+
+// Gerar link de convite único
+async function gerarLinkConvite(roomId, opcoes = {}) {
+  const usuario = auth.currentUser;
+  if (!usuario) throw new Error("Usuário não autenticado");
+
+  // Verifica se o usuário é admin da sala
+  const salas = await obterSalasDoUsuario(usuario.uid);
+  const sala = salas.find(s => s.roomId === roomId && s.role === "admin");
+  if (!sala) throw new Error("Apenas administradores podem gerar links de convite");
+
+  // Gera token único
+  const token = Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
+
+  const convite = {
+    roomId,
+    createdBy: usuario.uid,
+    token,
+    status: "pending",
+    createdAt: new Date(),
+    expiresAt: opcoes.expiresAt || null,
+    maxUses: opcoes.maxUses || 1,
+    uses: 0
+  };
+
+  try {
+    await addDoc(collection(db, "invites"), convite);
+    // Retorna o link para ser enviado ao usuário
+    return `${window.location.origin}/pages/convite.html?token=${token}`;
+  } catch (error) {
+    console.error("Erro ao gerar link de convite:", error);
+    throw error;
+  }
+}
+
+// Banir usuário da sala
+async function banirUsuario(roomId, userId, adminId) {
+  // Verifica se quem está banindo é admin
+  const adminMembershipQ = query(
+    collection(db, "memberships"),
+    where("userId", "==", adminId),
+    where("roomId", "==", roomId),
+    where("role", "==", "admin"),
+    where("status", "==", "active")
+  );
+  const adminMembershipSnap = await getDocs(adminMembershipQ);
+  if (adminMembershipSnap.empty) throw new Error("Apenas administradores podem banir usuários.");
+
+  // Busca o membership do usuário
+  const userMembershipQ = query(
+    collection(db, "memberships"),
+    where("userId", "==", userId),
+    where("roomId", "==", roomId)
+  );
+  const userMembershipSnap = await getDocs(userMembershipQ);
+  if (userMembershipSnap.empty) throw new Error("Usuário não encontrado na sala.");
+
+  const membershipDoc = userMembershipSnap.docs[0];
+  await updateDoc(doc(db, "memberships", membershipDoc.id), {
+    status: "banned"
+  });
+}
+
+// Desbanir usuário da sala
+async function desbanirUsuario(roomId, userId, adminId) {
+  // Verifica se quem está desbanindo é admin
+  const adminMembershipQ = query(
+    collection(db, "memberships"),
+    where("userId", "==", adminId),
+    where("roomId", "==", roomId),
+    where("role", "==", "admin"),
+    where("status", "==", "active")
+  );
+  const adminMembershipSnap = await getDocs(adminMembershipQ);
+  if (adminMembershipSnap.empty) throw new Error("Apenas administradores podem desbanir usuários.");
+
+  // Busca o membership do usuário
+  const userMembershipQ = query(
+    collection(db, "memberships"),
+    where("userId", "==", userId),
+    where("roomId", "==", roomId)
+  );
+  const userMembershipSnap = await getDocs(userMembershipQ);
+  if (userMembershipSnap.empty) throw new Error("Usuário não encontrado na sala.");
+
+  const membershipDoc = userMembershipSnap.docs[0];
+  await updateDoc(doc(db, "memberships", membershipDoc.id), {
+    status: "active"
+  });
+}
+
+// Remover mensagem do chat
+async function removerMensagem(roomId, messageId, adminId) {
+  // Verifica se quem está removendo é admin da sala
+  const adminMembershipQ = query(
+    collection(db, "memberships"),
+    where("userId", "==", adminId),
+    where("roomId", "==", roomId),
+    where("role", "==", "admin"),
+    where("status", "==", "active")
+  );
+  const adminMembershipSnap = await getDocs(adminMembershipQ);
+  if (adminMembershipSnap.empty) throw new Error("Apenas administradores podem remover mensagens.");
+
+  // Remove a mensagem
+  await deleteDoc(doc(db, "chat", messageId));
+}
+
 // Exportar funções
 export {
   criarSala,
@@ -237,5 +373,10 @@ export {
   obterSalasDoUsuario,
   procurarSalaPorCodigo,
   entrarEmSalaPorCodigo,
-  gerarCodigoSala
+  gerarCodigoSala,
+  gerarConvitePorEmail,
+  gerarLinkConvite,
+  banirUsuario,
+  desbanirUsuario,
+  removerMensagem
 };
