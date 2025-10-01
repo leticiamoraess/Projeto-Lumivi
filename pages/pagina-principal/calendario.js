@@ -1,16 +1,11 @@
+// ----------------- IMPORTS -----------------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  getDocs,
-  deleteDoc,
-  doc,
-  query,
-  orderBy,
-  where
+import { 
+  getFirestore, collection, query, where, orderBy, addDoc, getDocs, deleteDoc, doc 
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
+// ----------------- CONFIGURAÇÃO FIREBASE -----------------
 const firebaseConfig = {
   apiKey: "AIzaSyBUxLcOvtCClJ0XMAXsDQusme7PS7Xeo9g",
   authDomain: "callppo.firebaseapp.com",
@@ -23,27 +18,31 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
-
+// ----------------- VARIÁVEIS -----------------
 let calendar;
 let selectedDate = null;
-let modal; 
+let modal;
 
-// ----------------- FUNÇÕES ----------------- //
+// ----------------- FUNÇÕES AUXILIARES -----------------
+function obterIdDaSalaAtual() {
+  const urlParams = new URLSearchParams(window.location.search);
+  return urlParams.get("roomId");
+}
+const roomId = obterIdDaSalaAtual();
 
-/**
- * Cria o modal no DOM e conecta os listeners diretamente aos botões do modal.
- * Retorna a referência ao modal criado.
- */
+// ----------------- MODAL -----------------
 function createEventModal() {
-  if (document.getElementById('event-modal')) {
-    return document.getElementById('event-modal');
+  if (document.getElementById("event-modal")) {
+    return document.getElementById("event-modal");
   }
 
-  const m = document.createElement('div');
-  m.className = 'modal';
-  m.id = 'event-modal';
-  m.style.display = 'none';
+  const m = document.createElement("div");
+  m.className = "modal";
+  m.id = "event-modal";
+  m.style.display = "none";
+
   m.innerHTML = `
     <div class="modal-content">
       <div class="modal-header">
@@ -65,70 +64,54 @@ function createEventModal() {
 
   document.body.appendChild(m);
 
-  // Referências locais aos elementos do modal
-  const closeBtn = m.querySelector('.close-modal');
-  const cancelBtn = m.querySelector('.btn-cancel');
-  const saveBtn = m.querySelector('.btn-save');
+  // Botões do modal
+  const closeBtn = m.querySelector(".close-modal");
+  const cancelBtn = m.querySelector(".btn-cancel");
+  const saveBtn = m.querySelector(".btn-save");
 
-  function hideModal() {
-    m.style.display = 'none';
-  }
+  const hideModal = () => { m.style.display = "none"; };
 
-  closeBtn.addEventListener('click', () => {
-    console.log('close clicked');
-    hideModal();
+  closeBtn.addEventListener("click", hideModal);
+  cancelBtn.addEventListener("click", hideModal);
+
+  m.addEventListener("click", (e) => {
+    if (e.target === m) hideModal();
   });
 
-  cancelBtn.addEventListener('click', () => {
-    console.log('cancel clicked');
-    hideModal();
-  });
-
-  m.addEventListener('click', (e) => {
-    if (e.target === m) {
-      console.log('overlay clicked');
-      hideModal();
-    }
-  });
-
-  // Salvar (usa a função que persiste no Firebase)
-  saveBtn.addEventListener('click', async () => {
-    const titleInput = m.querySelector('#event-title');
+  // Salvar evento
+  saveBtn.addEventListener("click", async () => {
+    const titleInput = m.querySelector("#event-title");
     const title = titleInput.value.trim();
     if (!title || !selectedDate) {
       await Swal.fire({
-        title: 'Dados incompletos',
-        text: 'Por favor, digite o nome do evento.',
-        icon: 'warning',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f36c9c'
+        title: "Dados incompletos",
+        text: "Por favor, digite o nome do evento.",
+        icon: "warning",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#f36c9c"
       });
       return;
     }
-    console.log('Save clicked - title:', title, 'date:', selectedDate);
 
     try {
       await addEventToCalendarAndFirebase(title, selectedDate);
-      
-      // limpa e fecha modal
-      titleInput.value = '';
+      titleInput.value = "";
       hideModal();
-      
       await Swal.fire({
-        title: 'Evento salvo!',
-        text: 'O evento foi adicionado ao calendário com sucesso.',
-        icon: 'success',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#ADB447'
+        title: "Evento salvo!",
+        text: "O evento foi adicionado ao calendário com sucesso.",
+        icon: "success",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#ADB447"
       });
     } catch (error) {
-      console.error("Erro ao adicionar evento:", error);
+      console.error("Erro ao salvar evento:", error);
       await Swal.fire({
-        title: 'Erro',
-        text: 'Ocorreu um erro ao salvar o evento. Tente novamente.',
-        icon: 'error',
-        confirmButtonText: 'OK',
-        confirmButtonColor: '#f36c9c'
+        title: "Erro",
+        text: "Ocorreu um erro ao salvar o evento. Tente novamente.",
+        icon: "error",
+        confirmButtonText: "OK",
+        confirmButtonColor: "#f36c9c"
       });
     }
   });
@@ -136,125 +119,89 @@ function createEventModal() {
   return m;
 }
 
-/**
- * Mostra o modal para a data selecionada
- */
 function showEventModal(dateStr) {
   selectedDate = dateStr;
   if (!modal) modal = createEventModal();
-  modal.querySelector('#event-date').value = dateStr;
-  modal.querySelector('#event-title').value = '';
-  modal.style.display = 'flex';
-  modal.querySelector('#event-title').focus();
+  modal.querySelector("#event-date").value = dateStr;
+  modal.querySelector("#event-title").value = "";
+  modal.style.display = "flex";
+  modal.querySelector("#event-title").focus();
 }
 
-/**
- * Adiciona evento no Firestore e no FullCalendar
- */
+// ----------------- FIREBASE FUNÇÕES -----------------
 async function addEventToCalendarAndFirebase(title, date) {
-  try {
-    const docRef = await addDoc(collection(db, "eventos"), {
-      title: title,
-      date: date,
-      roomId, // <-- Adiciona o ID da sala
-      createdAt: new Date()
-    });
-
-    // garante que calendar exista
-    if (!calendar) {
-      console.warn('Calendar não inicializado ainda ao adicionar evento localmente.');
-    } else {
-      calendar.addEvent({
-        id: docRef.id,
-        title: title,
-        start: date,
-        allDay: true
-      });
-    }
-
-    console.log("Evento salvo com ID:", docRef.id);
-    return docRef.id;
-  } catch (e) {
-    console.error("Erro ao adicionar evento:", e);
-    alert("Erro ao salvar evento. Tente novamente.");
+  const user = auth.currentUser;
+  if (!user) {
+    alert("Faça login para adicionar eventos.");
+    return;
   }
+  const docRef = await addDoc(collection(db, "eventos"), {
+    title,
+    date,
+    roomId,
+    createdAt: new Date()
+  });
+
+  calendar.addEvent({
+    id: docRef.id,
+    title,
+    start: date,
+    allDay: true
+  });
 }
 
-/**
- * Carrega eventos do Firestore e adiciona ao calendário.
- */
 async function loadEventsFromFirebase() {
-  try {
-    const q = query(
-      collection(db, "eventos"),
-      where("roomId", "==", roomId),
-      orderBy("createdAt")
-    );
-    const querySnapshot = await getDocs(q);
-
-    querySnapshot.forEach((docSnap) => {
-      const eventData = docSnap.data();
-      calendar.addEvent({
-        id: docSnap.id,
-        title: eventData.title,
-        start: eventData.date,
-        allDay: true
-      });
+  const q = query(collection(db, "eventos"), where("roomId", "==", roomId), orderBy("createdAt"));
+  const snapshot = await getDocs(q);
+  snapshot.forEach(docSnap => {
+    const ev = docSnap.data();
+    calendar.addEvent({
+      id: docSnap.id,
+      title: ev.title,
+      start: ev.date,
+      allDay: true
     });
-    console.log("Eventos carregados do Firebase!");
-  } catch (e) {
-    console.error("Erro ao carregar eventos:", e);
-  }
+  });
 }
-
 
 async function removeEventFromCalendarAndFirebase(eventId) {
-  try {
-    await deleteDoc(doc(db, "eventos", eventId));
-    const event = calendar.getEventById(eventId);
-    if (event) event.remove();
-    console.log("Evento removido com sucesso!");
-  } catch (e) {
-    console.error("Erro ao remover evento:", e);
-  }
+  await deleteDoc(doc(db, "eventos", eventId));
+  const event = calendar.getEventById(eventId);
+  if (event) event.remove();
 }
 
-// ----------------- INICIALIZAÇÃO ----------------- //
-document.addEventListener('DOMContentLoaded', async function () {
+// ----------------- INICIALIZAÇÃO -----------------
+document.addEventListener("DOMContentLoaded", async () => {
   modal = createEventModal();
 
-  // inicializa o FullCalendar
-  const calendarEl = document.getElementById('calendar');
+  const calendarEl = document.getElementById("calendar");
   calendar = new FullCalendar.Calendar(calendarEl, {
-    initialView: 'dayGridMonth',
+    initialView: "dayGridMonth",
     fixedWeekCount: false,
     expandRows: true,
-    locale: 'pt-br',
-    height: 'auto',
+    locale: "pt-br",
+    height: "auto",
     selectable: true,
-    showNonCurrentDates: false,
-    dateClick: function (info) {
-      showEventModal(info.dateStr);
-    },
-    eventClick: function(info) {
+    dateClick: (info) => showEventModal(info.dateStr),
+    eventClick: (info) => {
       Swal.fire({
-        title: 'Evento',
+        title: "Evento",
         html: `<strong>${info.event.title}</strong><br><small>${info.event.start.toLocaleDateString()}</small>`,
-        icon: 'info',
+        icon: "info",
         showCancelButton: true,
-        confirmButtonColor: '#f36c9c',
-        cancelButtonColor: '#ADB447',
-        confirmButtonText: 'Excluir',
-        cancelButtonText: 'Fechar'
+        confirmButtonColor: "#f36c9c",
+        cancelButtonColor: "#ADB447",
+        confirmButtonText: "Excluir",
+        cancelButtonText: "Fechar"
       }).then((result) => {
         if (result.isConfirmed && info.event.id) {
           removeEventFromCalendarAndFirebase(info.event.id);
           Swal.fire({
-            title: 'Excluído!',
-            text: 'O evento foi removido com sucesso.',
-            icon: 'success',
-            confirmButtonText: 'OK',
-            confirmButtonColor: '#ADB447'
+            title: "Excluído!",
+            text: "O evento foi removido com sucesso.",
+            icon: "success",
+            confirmButtonText: "OK",
+            confirmButtonColor: "#ADB447"
           });
         }
       });
@@ -262,9 +209,5 @@ document.addEventListener('DOMContentLoaded', async function () {
   });
 
   calendar.render();
-
   await loadEventsFromFirebase();
 });
-
-const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get('roomId') || window.roomId || 'defaultRoom';

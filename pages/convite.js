@@ -1,7 +1,6 @@
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, query, where, getDocs, updateDoc, doc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, updateDoc, doc, addDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-import { adicionarUsuarioASala } from "./sala_backend.js";
 
 const firebaseConfig = {
   apiKey: "AIzaSyBUxLcOvtCClJ0XMAXsDQusme7PS7Xeo9g",
@@ -44,7 +43,7 @@ if (!token) {
     const conviteDoc = snapshot.docs[0];
     const convite = conviteDoc.data();
 
-    // Verifica se já foi usado
+    // Verifica se já foi usado ou expirou
     if (convite.status !== "pending" || (convite.maxUses && convite.uses >= convite.maxUses)) {
       statusDiv.textContent = "Este convite já foi utilizado ou expirou.";
       return;
@@ -52,14 +51,19 @@ if (!token) {
 
     // Adiciona o usuário à sala
     try {
-      await adicionarUsuarioASala(user.uid, convite.roomId, "member");
+      await addDoc(collection(db, "memberships"), {
+        userId: user.uid,
+        roomId: convite.roomId,
+        role: "member",
+        status: "active",
+        joinedAt: new Date()
+      });
       // Atualiza o convite para marcar como usado
       await updateDoc(doc(db, "invites", conviteDoc.id), {
         uses: (convite.uses || 0) + 1,
         status: ((convite.maxUses && convite.uses + 1 >= convite.maxUses) ? "used" : "pending")
       });
       statusDiv.textContent = "Você entrou na sala com sucesso!";
-      // Redireciona para a página principal da sala
       setTimeout(() => {
         window.location.href = `pagina-principal.html?roomId=${convite.roomId}`;
       }, 2000);

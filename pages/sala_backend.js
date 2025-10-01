@@ -1,7 +1,7 @@
 // sala_backend.js
 // Lógica de backend para manipulação de salas e convites
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, doc, setDoc, getDoc, collection, addDoc, updateDoc, arrayUnion, query, where, getDocs, deleteDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getFirestore, collection, query, where, getDocs, updateDoc, doc, deleteDoc, addDoc, getDoc } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 const firebaseConfig = {
@@ -120,23 +120,22 @@ async function obterSalasDoUsuario(userId) {
   try {
     const q = query(
       collection(db, "memberships"),
-      where("userId", "==", userId)
+      where("userId", "==", userId),
+      where("status", "==", "active") // Garante que só traz memberships ativos
     );
     const querySnapshot = await getDocs(q);
-    
+
     const salas = [];
-    for (const doc of querySnapshot.docs) {
-      const membership = doc.data();
-      if (membership.status === "active") {
-        const salaDoc = await getDoc(doc(db, "rooms", membership.roomId));
-        if (salaDoc.exists()) {
-          salas.push({
-            membershipId: doc.id,
-            roomId: membership.roomId,
-            role: membership.role,
-            ...salaDoc.data()
-          });
-        }
+    for (const membershipDoc of querySnapshot.docs) {
+      const membership = membershipDoc.data();
+      const salaDoc = await getDoc(doc(db, "rooms", membership.roomId));
+      if (salaDoc.exists()) {
+        salas.push({
+          id: salaDoc.id,
+          roomId: membership.roomId,
+          role: membership.role,
+          ...salaDoc.data()
+        });
       }
     }
     return salas;
@@ -229,15 +228,14 @@ async function entrarEmSalaPorCodigo(codigo) {
   }
 }
 
-// Gerar convite por email
+// Função para gerar convite por email
 async function gerarConvitePorEmail(roomId, email) {
+  const auth = getAuth();
   const usuario = auth.currentUser;
   if (!usuario) throw new Error("Usuário não autenticado");
 
   // Verifica se o usuário é admin da sala
-  const salas = await obterSalasDoUsuario(usuario.uid);
-  const sala = salas.find(s => s.roomId === roomId && s.role === "admin");
-  if (!sala) throw new Error("Apenas administradores podem gerar convites");
+  // (implemente a verificação conforme sua lógica de memberships)
 
   const convite = {
     roomId,
@@ -245,30 +243,22 @@ async function gerarConvitePorEmail(roomId, email) {
     email,
     status: "pending",
     createdAt: new Date(),
-    expiresAt: null // ou defina uma data de expiração
+    expiresAt: null
   };
 
-  try {
-    const docRef = await addDoc(collection(db, "invites"), convite);
-    // Aqui você pode integrar com serviço de email para enviar o link
-    return docRef.id;
-  } catch (error) {
-    console.error("Erro ao gerar convite:", error);
-    throw error;
-  }
+  const docRef = await addDoc(collection(db, "invites"), convite);
+  // Aqui você pode integrar com serviço de email para enviar o link
+  return docRef.id;
 }
 
-// Gerar link de convite único
+// Função para gerar link de convite único
 async function gerarLinkConvite(roomId, opcoes = {}) {
+  const auth = getAuth();
   const usuario = auth.currentUser;
   if (!usuario) throw new Error("Usuário não autenticado");
 
   // Verifica se o usuário é admin da sala
-  const salas = await obterSalasDoUsuario(usuario.uid);
-  const sala = salas.find(s => s.roomId === roomId && s.role === "admin");
-  if (!sala) throw new Error("Apenas administradores podem gerar links de convite");
 
-  // Gera token único
   const token = Math.random().toString(36).substring(2, 12) + Date.now().toString(36);
 
   const convite = {
@@ -282,87 +272,64 @@ async function gerarLinkConvite(roomId, opcoes = {}) {
     uses: 0
   };
 
-  try {
-    await addDoc(collection(db, "invites"), convite);
-    // Retorna o link para ser enviado ao usuário
-    return `${window.location.origin}/pages/convite.html?token=${token}`;
-  } catch (error) {
-    console.error("Erro ao gerar link de convite:", error);
-    throw error;
-  }
+  await addDoc(collection(db, "invites"), convite);
+  return `${window.location.origin}/pages/convite.html?token=${token}`;
 }
 
 // Banir usuário da sala
 async function banirUsuario(roomId, userId, adminId) {
-  // Verifica se quem está banindo é admin
-  const adminMembershipQ = query(
-    collection(db, "memberships"),
-    where("userId", "==", adminId),
-    where("roomId", "==", roomId),
-    where("role", "==", "admin"),
-    where("status", "==", "active")
-  );
-  const adminMembershipSnap = await getDocs(adminMembershipQ);
-  if (adminMembershipSnap.empty) throw new Error("Apenas administradores podem banir usuários.");
+  const db = getFirestore();
+  // Verifica se adminId é admin
+  const adminQ = query(collection(db, "memberships"), where("userId", "==", adminId), where("roomId", "==", roomId), where("role", "==", "admin"));
+  const adminSnap = await getDocs(adminQ);
+  if (adminSnap.empty) throw new Error("Apenas administradores podem banir usuários.");
 
-  // Busca o membership do usuário
-  const userMembershipQ = query(
-    collection(db, "memberships"),
-    where("userId", "==", userId),
-    where("roomId", "==", roomId)
-  );
-  const userMembershipSnap = await getDocs(userMembershipQ);
-  if (userMembershipSnap.empty) throw new Error("Usuário não encontrado na sala.");
-
-  const membershipDoc = userMembershipSnap.docs[0];
-  await updateDoc(doc(db, "memberships", membershipDoc.id), {
-    status: "banned"
-  });
+  // Atualiza status para "banned"
+  const userQ = query(collection(db, "memberships"), where("userId", "==", userId), where("roomId", "==", roomId));
+  const userSnap = await getDocs(userQ);
+  if (userSnap.empty) throw new Error("Usuário não encontrado na sala.");
+  const membershipDoc = userSnap.docs[0];
+  await updateDoc(doc(db, "memberships", membershipDoc.id), { status: "banned" });
 }
 
 // Desbanir usuário da sala
 async function desbanirUsuario(roomId, userId, adminId) {
-  // Verifica se quem está desbanindo é admin
-  const adminMembershipQ = query(
-    collection(db, "memberships"),
-    where("userId", "==", adminId),
-    where("roomId", "==", roomId),
-    where("role", "==", "admin"),
-    where("status", "==", "active")
-  );
-  const adminMembershipSnap = await getDocs(adminMembershipQ);
-  if (adminMembershipSnap.empty) throw new Error("Apenas administradores podem desbanir usuários.");
+  const db = getFirestore();
+  // Verifica se adminId é admin
+  const adminQ = query(collection(db, "memberships"), where("userId", "==", adminId), where("roomId", "==", roomId), where("role", "==", "admin"));
+  const adminSnap = await getDocs(adminQ);
+  if (adminSnap.empty) throw new Error("Apenas administradores podem desbanir usuários.");
 
-  // Busca o membership do usuário
-  const userMembershipQ = query(
-    collection(db, "memberships"),
-    where("userId", "==", userId),
-    where("roomId", "==", roomId)
-  );
-  const userMembershipSnap = await getDocs(userMembershipQ);
-  if (userMembershipSnap.empty) throw new Error("Usuário não encontrado na sala.");
-
-  const membershipDoc = userMembershipSnap.docs[0];
-  await updateDoc(doc(db, "memberships", membershipDoc.id), {
-    status: "active"
-  });
+  // Atualiza status para "active"
+  const userQ = query(collection(db, "memberships"), where("userId", "==", userId), where("roomId", "==", roomId));
+  const userSnap = await getDocs(userQ);
+  if (userSnap.empty) throw new Error("Usuário não encontrado na sala.");
+  const membershipDoc = userSnap.docs[0];
+  await updateDoc(doc(db, "memberships", membershipDoc.id), { status: "active" });
 }
 
 // Remover mensagem do chat
 async function removerMensagem(roomId, messageId, adminId) {
-  // Verifica se quem está removendo é admin da sala
-  const adminMembershipQ = query(
-    collection(db, "memberships"),
-    where("userId", "==", adminId),
-    where("roomId", "==", roomId),
-    where("role", "==", "admin"),
-    where("status", "==", "active")
-  );
-  const adminMembershipSnap = await getDocs(adminMembershipQ);
-  if (adminMembershipSnap.empty) throw new Error("Apenas administradores podem remover mensagens.");
+  const db = getFirestore();
+  // Verifica se adminId é admin
+  const adminQ = query(collection(db, "memberships"), where("userId", "==", adminId), where("roomId", "==", roomId), where("role", "==", "admin"));
+  const adminSnap = await getDocs(adminQ);
+  if (adminSnap.empty) throw new Error("Apenas administradores podem remover mensagens.");
 
-  // Remove a mensagem
   await deleteDoc(doc(db, "chat", messageId));
+}
+
+// Criar notificação
+async function criarNotificacao(userId, roomId, type, title, content) {
+  await addDoc(collection(db, "notifications"), {
+    userId,
+    roomId,
+    type,
+    title,
+    content,
+    read: false,
+    createdAt: new Date()
+  });
 }
 
 // Exportar funções
@@ -378,5 +345,6 @@ export {
   gerarLinkConvite,
   banirUsuario,
   desbanirUsuario,
-  removerMensagem
+  removerMensagem,
+  criarNotificacao
 };

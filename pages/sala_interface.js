@@ -156,7 +156,7 @@ async function carregarSalasDoUsuario() {
             <p>Função: ${sala.role}</p>
           </div>
           <div class="room-actions">
-            <a href="../pagina-principal/pagina-principal.html?room=${sala.id}" class="btn-primary">Acessar Sala</a>
+            <a href="pagina-principal/pagina-principal.html?roomId=${sala.id}" class="btn-primary">Acessar Sala</a>
           </div>
         </li>
       `;

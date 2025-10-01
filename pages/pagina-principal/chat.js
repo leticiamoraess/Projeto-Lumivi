@@ -1,8 +1,9 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-app.js";
-import { getFirestore, collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-firestore.js";
-import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.9.1/firebase-auth.js";
+// -------------------- IMPORTS --------------------
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, collection, query, where, orderBy, addDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
-// Sua configuração do Firebase
+// -------------------- CONFIG FIREBASE --------------------
 const firebaseConfig = {
   apiKey: "AIzaSyBUxLcOvtCClJ0XMAXsDQusme7PS7Xeo9g",
   authDomain: "callppo.firebaseapp.com",
@@ -12,63 +13,104 @@ const firebaseConfig = {
   appId: "1:631386689899:web:6fca2231e749797458bc2e",
   measurementId: "G-4N3FPFY63T"
 };
+
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
+// -------------------- VARIÁVEIS --------------------
 let currentUser = null;
 
-// Verifica se o usuário está logado
-onAuthStateChanged(auth, (user) => {
-  currentUser = user;
-  console.log("Usuário logado:", currentUser);
-});
+// -------------------- CHECAR PERMISSÃO --------------------
+async function usuarioPodeUsarChat(uid) {
+  const q = query(
+    collection(db, "memberships"),
+    where("userId", "==", uid),
+    where("roomId", "==", roomId)
+  );
+  const snap = await getDocs(q);
+  if (snap.empty) return false;
+  return snap.docs[0].data().status !== "banned";
+}
 
-// Enviar mensagem
-document.getElementById("chat-form").addEventListener("submit", async function(e) {
-  e.preventDefault();
-  const input = document.getElementById("chat-input");
-  const text = input.value.trim();
-  console.log("Tentando enviar:", text, currentUser);
-  if (text && currentUser) {
-    try {
-      await addDoc(collection(db, "chat"), {
-        text,
-        user: currentUser.displayName || currentUser.email,
-        timestamp: serverTimestamp(),
-        roomId // <-- Adiciona o ID da sala
-      });
-      input.value = "";
-    } catch (error) {
-      console.error("Erro ao enviar mensagem:", error);
-      // Para este caso específico, manter o alert tradicional para não causar conflito com outros alertas
-      alert("Erro ao enviar mensagem. Tente novamente.");
-    }
-  } else if (!currentUser) {
-    // Usar alert tradicional para manter consistência com o comportamento padrão do sistema
-    alert("Você precisa estar logado para enviar mensagens.");
+// -------------------- AUTENTICAÇÃO --------------------
+onAuthStateChanged(auth, (user) => {
+  if (user) {
+    currentUser = user;
+    iniciarChat(); // Só inicia chat depois que o user estiver definido
+  } else {
+    alert("Faça login para acessar o chat.");
   }
 });
 
-// Exibir mensagens em tempo real
-const chatMessages = document.getElementById("chat-messages");
-const q = query(
-  collection(db, "chat"),
-  where("roomId", "==", roomId),
-  orderBy("timestamp")
-);
-onSnapshot(q, (snapshot) => {
-  chatMessages.innerHTML = "";
-  snapshot.forEach((doc) => {
-    const msg = doc.data();
-    const div = document.createElement("div");
-    div.innerHTML = `<strong>${msg.user}:</strong> ${msg.text}`;
-    chatMessages.appendChild(div);
+// -------------------- FUNÇÃO ENVIAR --------------------
+async function enviarMensagem(texto) {
+  if (!currentUser) {
+    alert("Você precisa estar logado.");
+    return;
+  }
+
+  if (!roomId) {
+    alert("Sala inválida. Recarregue a página com um roomId válido.");
+    return;
+  }
+
+  if (!(await usuarioPodeUsarChat(currentUser.uid))) {
+    alert("Você não tem permissão para usar o chat desta sala.");
+    return;
+  }
+
+  await addDoc(collection(db, "chat"), {
+    text: texto,
+    userId: currentUser.uid,
+    userName: currentUser.displayName || currentUser.email,
+    roomId: roomId, // <-- garante que a mensagem é salva na sala correta
+    timestamp: new Date()
   });
-  chatMessages.scrollTop = chatMessages.scrollHeight;
-});
+}
 
-// Exemplo: obter o roomId da URL ou de uma variável global
-const urlParams = new URLSearchParams(window.location.search);
-const roomId = urlParams.get('roomId') || window.roomId || 'defaultRoom';
+// -------------------- CHAT --------------------
+function iniciarChat() {
+  const chatMessages = document.getElementById("chat-messages");
+  const chatForm = document.getElementById("chat-form");
+  const chatInput = document.getElementById("chat-input");
 
+  if (!chatMessages || !chatForm || !chatInput) {
+    console.error("Elementos do chat não encontrados no DOM.");
+    return;
+  }
+
+  // Limpa as mensagens anteriores
+  chatMessages.innerHTML = "";
+
+  // Listener para mensagens da sala atual
+  const q = query(
+    collection(db, "chat"),
+    where("roomId", "==", roomId), // <-- só carrega as da sala atual
+    orderBy("timestamp")
+  );
+
+  onSnapshot(q, (snapshot) => {
+    chatMessages.innerHTML = "";
+    snapshot.forEach(doc => {
+      const msg = doc.data();
+      const div = document.createElement("div");
+      div.classList.add("msg");
+      div.textContent = `${msg.userName}: ${msg.text}`;
+      chatMessages.appendChild(div);
+    });
+
+    // Sempre rola até a última mensagem
+    chatMessages.scrollTop = chatMessages.scrollHeight;
+  });
+
+  // Envio de mensagem
+  chatForm.addEventListener("submit", async e => {
+    e.preventDefault();
+    const texto = chatInput.value.trim();
+    if (texto) {
+      await enviarMensagem(texto);
+      chatInput.value = "";
+    }
+  });
+}
