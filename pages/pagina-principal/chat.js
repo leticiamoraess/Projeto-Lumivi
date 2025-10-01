@@ -1,6 +1,8 @@
 // -------------------- IMPORTS --------------------
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getFirestore, collection, query, where, orderBy, addDoc, onSnapshot, getDocs } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+import { 
+  getFirestore, collection, query, where, orderBy, addDoc, onSnapshot, getDocs 
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 
 // -------------------- CONFIG FIREBASE --------------------
@@ -17,9 +19,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
-
-// -------------------- VARIÁVEIS --------------------
-let currentUser = null;
 
 // -------------------- CHECAR PERMISSÃO --------------------
 async function usuarioPodeUsarChat(uid) {
@@ -43,6 +42,25 @@ onAuthStateChanged(auth, (user) => {
   }
 });
 
+
+// ---------- Chat ----------
+  const chatForm = document.getElementById("chat-form");
+  const chatMessages = document.getElementById("chat-messages");
+  if (chatForm) {
+    chatForm.addEventListener("submit", (e) => {
+      e.preventDefault();
+      const input = document.getElementById("chat-input");
+      const msg = input.value.trim();
+      if (!msg) return;
+      const div = document.createElement("div");
+      div.textContent = auth.currentUser.displayName + ": " + msg;
+      chatMessages.appendChild(div);
+      input.value = "";
+      chatMessages.scrollTop = chatMessages.scrollHeight;
+      // 🔥 Se quiser salvar no Firestore, adicionar código aqui
+    });
+  }
+  
 // -------------------- FUNÇÃO ENVIAR --------------------
 async function enviarMensagem(texto) {
   if (!currentUser) {

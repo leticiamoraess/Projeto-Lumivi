@@ -22,7 +22,10 @@ function obterIdDaSalaAtual() {
   const urlParams = new URLSearchParams(window.location.search);
   return urlParams.get("roomId");
 }
-const roomId = obterIdDaSalaAtual();
+
+// Tornando roomId global para ser acessado por outros módulos
+window.roomId = obterIdDaSalaAtual();
+const roomId = window.roomId;
 
 async function usuarioEhMembroAtivo(uid, roomId) {
   const q = query(
@@ -63,6 +66,7 @@ onAuthStateChanged(auth, async (user) => {
     };
   }
 
+
   // ---------- Rádio ----------
   const soundBtn = document.getElementById("sound-btn");
   const player = document.getElementById("player");
@@ -95,14 +99,22 @@ onAuthStateChanged(auth, async (user) => {
     }
     const domain = "meet.jit.si";
     const options = {
-      roomName: "Sala LUMIVI",   // 🔑 Nome fixo do canal
-      width: 700,
+      roomName: "Sala LUMIVI",
+      width: "100%",
       height: 500,
-      parentNode: document.getElementById("jitsi-container"),
-      userInfo: {
-        displayName: auth.currentUser.displayName || auth.currentUser.email
-      }
+      parentNode: document.querySelector('#jitsi-container'),
+      configOverwrite: {
+        startWithVideoMuted: true,
+        startWithAudioMuted: true
+      }, interfaceConfigOverwrite: {
+        SHOW_JITSI_WATERMARK: false,
+        SHOW_BRAND_WATERMARK: false,
+        TOOLBAR_BUTTONS: [
+          'microphone', 'hangup', 'chat', 'settings'
+        ]
+        }
     };
+
     new JitsiMeetExternalAPI(domain, options);
   }
 
@@ -184,24 +196,6 @@ onAuthStateChanged(auth, async (user) => {
       ) {
         expandContainer(voiceBoxElement);
       }
-    });
-  }
-
-  // ---------- Chat ----------
-  const chatForm = document.getElementById("chat-form");
-  const chatMessages = document.getElementById("chat-messages");
-  if (chatForm) {
-    chatForm.addEventListener("submit", (e) => {
-      e.preventDefault();
-      const input = document.getElementById("chat-input");
-      const msg = input.value.trim();
-      if (!msg) return;
-      const div = document.createElement("div");
-      div.textContent = auth.currentUser.displayName + ": " + msg;
-      chatMessages.appendChild(div);
-      input.value = "";
-      chatMessages.scrollTop = chatMessages.scrollHeight;
-      // 🔥 Se quiser salvar no Firestore, adicionar código aqui
     });
   }
 
